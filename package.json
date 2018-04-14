@@ -1,5 +1,5 @@
 {
-  "name": "phaser-es6-boilerplate",
+  "name": "mission7",
   "version": "1.0.2",
   "description": "Tiny flexible template for writing Phaser games in ES6/ES2015 with Babel.",
   "main": "src/index.js",
