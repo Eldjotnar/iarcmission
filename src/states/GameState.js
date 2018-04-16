@@ -7,6 +7,9 @@ class GameState extends Phaser.State {
 		this.game.load.image('gRobot', 'assets/ground_robot.png');
 	}
 	create() {
+		this.game.time.desiredFps = 30;
+		this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
 		// measure the size of the window
 	  var ww = window.innerWidth * window.devicePixelRatio;
 	  var wh = window.innerHeight * window.devicePixelRatio;
