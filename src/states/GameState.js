@@ -25,8 +25,9 @@ class GameState extends Phaser.State {
 		backgroundGrid.height = wh * scaleFactor;
 		backgroundGrid.width = wh * scaleFactor;
 
-		var bots = this.game.physics.p2.createCollisionGroup();
-		//bots = this.game.add.group();
+		var botCollisionGroup = this.game.physics.p2.createCollisionGroup();
+		this.game.physics.p2.setImpactEvents(true);
+		bots = this.game.add.group();
 		//bots.enableBody = true;
 		//this.game.physics.enable(bots, Phaser.Physics.ARCADE);
 		//bots = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
@@ -44,7 +45,12 @@ class GameState extends Phaser.State {
       var y = center.y + radius * Math.sin(angle);
 			//console.log(angle * 180/Math.PI);
 			let test = new GroundRobot(this.game, scaleFactor, angle* 180/Math.PI, x, y, 'gRobot');
-			//bots.create(new GroundRobot(this.game, scaleFactor, angle* 180/Math.PI, x, y, 'gRobot'));
+			// var bot = bots.create(new GroundRobot(this.game, scaleFactor, angle* 180/Math.PI, x, y, 'gRobot'));
+			// console.log(test);
+			// bots.add(test);
+			// bot.body.setCircle(10);
+			// test.body.setCollisionGroup(botCollisionGroup);
+			// test.body.collides(botCollisionGroup);
       angle += step;
     }
 

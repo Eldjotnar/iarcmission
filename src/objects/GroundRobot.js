@@ -7,26 +7,20 @@ class GroundRobot extends Phaser.Sprite {
 
     this.height = this.height/4 * sf;
     this.width = this.width/4 * sf;
-    //this.angle = -90;
+
     this.angle = angle;
     this.smoothed = false;
 
     this.game.physics.p2.enableBody(this);
     this.body.setCircle(10);
     this.body.fixedRotation = true;
-    // this.body.velocity.x = 5;
-    //this.enableBody = true;
 
-    this.mySpeed = -(50/3)*sf;
-    console.log(this.angle + " " + Math.sin(this.angle*Math.PI/180) + " " + Math.cos(this.angle*Math.PI/180));
-    this.body.velocity.y = (50/3)*sf*Math.sin(this.angle*Math.PI/180);
-    this.body.velocity.x = (50/3)*sf*Math.cos(this.angle*Math.PI/180);
-    //this.game.physics.p2.velocityFromAngle(this.angle, 10, this.body.velocity);
-    //
-    // this.oldVelocity = this.body.velocity;
-    // this.body.collideWorldBounds = true;
-    //
-    // this.game.time.events.repeat(Phaser.Timer.SECOND * 5, 50, this.spin, this);
+    this.mySpeed = 50/3;//-(50/3)*sf;
+
+    this.body.velocity.y = -this.mySpeed*Math.sin(this.angle*Math.PI/180);
+    this.body.velocity.x = -this.mySpeed*Math.cos(this.angle*Math.PI/180);
+
+    this.body.onBeginContact.add(this.robotHit, this);
     this.game.stage.addChild(this);
   }
   update() {
@@ -44,6 +38,9 @@ class GroundRobot extends Phaser.Sprite {
   //     this.destroy();
   //   }
   //   //console.log(this.x);
+  }
+  robotHit() {
+    console.log("collision!");
   }
   keepGoing() {
     this.body.angularVelocity = 0;
