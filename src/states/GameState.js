@@ -1,5 +1,6 @@
 import RainbowText from 'objects/RainbowText';
 import GroundRobot from 'objects/GroundRobot';
+var bots;
 
 class GameState extends Phaser.State {
 	preload() {
@@ -8,7 +9,7 @@ class GameState extends Phaser.State {
 	}
 	create() {
 		this.game.time.desiredFps = 30;
-		this.game.physics.startSystem(Phaser.Physics.ARCADE);
+		this.game.physics.startSystem(Phaser.Physics.P2JS);
 
 		// measure the size of the window
 	  var ww = window.innerWidth * window.devicePixelRatio;
@@ -24,11 +25,35 @@ class GameState extends Phaser.State {
 		backgroundGrid.height = wh * scaleFactor;
 		backgroundGrid.width = wh * scaleFactor;
 
+		var bots = this.game.physics.p2.createCollisionGroup();
+		//bots = this.game.add.group();
+		//bots.enableBody = true;
+		//this.game.physics.enable(bots, Phaser.Physics.ARCADE);
+		//bots = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
+
+		//let test = new GroundRobot(this.game, scaleFactor, 0, center.x, center.y, 'gRobot');
+		//console.log('my bum');
+		//bots.create(new GroundRobot(this.game, scaleFactor, 0, center.x, center.y, 'gRobot'));
+		var numElements = 5;
+    var angle = 0;
+		var radius = 50; // px TODO: adjust to proper size
+    var step = (2*Math.PI) / numElements;
+    for(var i = 0; i < numElements; i++) {
+			//console.log("here");
+      var x = center.x + radius * Math.cos(angle);
+      var y = center.y + radius * Math.sin(angle);
+			//console.log(angle * 180/Math.PI);
+			let test = new GroundRobot(this.game, scaleFactor, angle* 180/Math.PI, x, y, 'gRobot');
+			//bots.create(new GroundRobot(this.game, scaleFactor, angle* 180/Math.PI, x, y, 'gRobot'));
+      angle += step;
+    }
+
+
+
 		//var test = this.add.sprite(center.x, center.y, 'gRobot');
-		let test = new GroundRobot(this.game, scaleFactor, center.x, center.y, 'gRobot');
+		// let test = new GroundRobot(this.game, scaleFactor, -90, center.x, center.y, 'gRobot');
 		//let text = new RainbowText(this.game, center.x, center.y, "- phaser -\nwith a sprinkle of\nES6 dust!");
 	}
-
 }
 
 export default GameState;
