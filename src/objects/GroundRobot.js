@@ -17,11 +17,16 @@ class GroundRobot extends Phaser.Sprite {
 
     this.mySpeed = 50/3;//-(50/3)*sf;
 
-    this.body.velocity.y = -this.mySpeed*Math.sin(this.angle*Math.PI/180);
-    this.body.velocity.x = -this.mySpeed*Math.cos(this.angle*Math.PI/180);
+    this.body.velocity.y = this.mySpeed*Math.sin(this.angle*Math.PI/180);
+    this.body.velocity.x = this.mySpeed*Math.cos(this.angle*Math.PI/180);
+
+    this.body.damping= 0;
+    this.body.mass = 0.1;
 
     this.body.onBeginContact.add(this.robotHit, this);
     this.game.stage.addChild(this);
+
+    this.game.time.events.repeat(Phaser.Timer.SECOND * 5, 30, this.spin, this);
   }
   update() {
     //this.body.setZeroVelocity();
@@ -40,27 +45,43 @@ class GroundRobot extends Phaser.Sprite {
   //   //console.log(this.x);
   }
   robotHit() {
-    console.log("collision!");
+    //console.log("collision!");
   }
   keepGoing() {
     this.body.angularVelocity = 0;
-    this.body.velocity = this.oldVelocity;
-    this.game.physics.arcade.velocityFromAngle(this.angle, 10, this.body.velocity);
-    console.log("x: " + this.x + " y: " + this.y);
+    this.angle = this.myAngle;
+    this.body.fixedRotation = true;
+    console.log(this.angle);
+
+    this.body.velocity.y = this.mySpeed*Math.sin(this.angle*Math.PI/180);
+    this.body.velocity.x = this.mySpeed*Math.cos(this.angle*Math.PI/180);
+    // console.log("New: " + this.angle)
+    // this.body.velocity = this.oldVelocity;
+    // this.game.physics.arcade.velocityFromAngle(this.angle, 10, this.body.velocity);
+    // console.log("x: " + this.x + " y: " + this.y);
   }
   spin() {
-    var angle = Math.floor(Math.random() * 21);
+    // console.log('called');
+    // console.log("before: " + this.myAngle)
+    // this.myAngle = this.angle + Math.floor(Math.random() * 21);
+    // console.log("after: " + this.myAngle);
+    var angleChange = Math.floor(Math.random() * 21);
     if(this.count == 4) {
-      angle = 180;
+      // this.myAngle += 180;
+      angleChange = 180;
       this.count = 0;
     } else {
       this.count++;
     }
-    this.oldVelocity = this.body.velocity;
-    this.body.velocity = 0;
+    this.myAngle = this.angle + angleChange;
+    // this.oldVelocity = this.body.velocity;
+    this.body.setZeroVelocity();
 
-    this.body.angularVelocity = 90; //degrees/sec
-    var time = angle/90;
+    // for some godforsaken reason, the robot spins at -55.763767deg/sec
+    this.body.fixedRotation = false;
+    this.body.angularVelocity = (this.angle/this.angle)*2; // hell if I know what the units are
+    var time = 1/(55.763767/angleChange);
+
     this.game.time.events.add(Phaser.Timer.SECOND * time, this.keepGoing, this);
   }
 }

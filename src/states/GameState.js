@@ -10,6 +10,7 @@ class GameState extends Phaser.State {
 	create() {
 		this.game.time.desiredFps = 30;
 		this.game.physics.startSystem(Phaser.Physics.P2JS);
+		this.game.physics.p2.restitution = 0.9;
 
 		// measure the size of the window
 	  var ww = window.innerWidth * window.devicePixelRatio;
@@ -35,7 +36,7 @@ class GameState extends Phaser.State {
 		//let test = new GroundRobot(this.game, scaleFactor, 0, center.x, center.y, 'gRobot');
 		//console.log('my bum');
 		//bots.create(new GroundRobot(this.game, scaleFactor, 0, center.x, center.y, 'gRobot'));
-		var numElements = 5;
+		var numElements = 1;
     var angle = 0;
 		var radius = 50; // px TODO: adjust to proper size
     var step = (2*Math.PI) / numElements;
@@ -45,6 +46,9 @@ class GameState extends Phaser.State {
       var y = center.y + radius * Math.sin(angle);
 			//console.log(angle * 180/Math.PI);
 			let test = new GroundRobot(this.game, scaleFactor, angle* 180/Math.PI, x, y, 'gRobot');
+			//test.body.fixedRotation = false;
+			//test.body.angularVelocity = 50;
+			//console.log(test.body.angularVelocity);
 			// var bot = bots.create(new GroundRobot(this.game, scaleFactor, angle* 180/Math.PI, x, y, 'gRobot'));
 			// console.log(test);
 			// bots.add(test);
