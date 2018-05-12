@@ -36,7 +36,7 @@ class GameState extends Phaser.State {
 		//let test = new GroundRobot(this.game, scaleFactor, 0, center.x, center.y, 'gRobot');
 		//console.log('my bum');
 		//bots.create(new GroundRobot(this.game, scaleFactor, 0, center.x, center.y, 'gRobot'));
-		var numElements = 1;
+		var numElements = 10;
     var angle = 0;
 		var radius = 50; // px TODO: adjust to proper size
     var step = (2*Math.PI) / numElements;
