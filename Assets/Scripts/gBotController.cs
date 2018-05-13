@@ -11,10 +11,10 @@ public class gBotController : MonoBehaviour {
     private int count = 1;
 
     // Use this for initialization
-    IEnumerator Start () {
+    void Start () {
         rb2d = GetComponent<Rigidbody2D>();
-        yield return new WaitForSeconds(5);
-        StartCoroutine(RotateBot(90, Vector3.forward, 2)); // this will have to be dependent on starting orientation i think
+        //yield return new WaitForSeconds(5);
+        StartCoroutine(RotateBot()); // this will have to be dependent on starting orientation i think
     }
 	
 	// Update is called once per frame
@@ -33,11 +33,14 @@ public class gBotController : MonoBehaviour {
         //print(rb2d.rotation);
     }
 
-    IEnumerator RotateBot(float angle, Vector3 axis, float inTime)
+    IEnumerator RotateBot()
     {
-        float rotationSpeed = angle / inTime;
+        float angle;
+        float rotationSpeed = 180 / 2;
         while (true)
         {
+            yield return new WaitForSeconds(5);
+
             spinning = true;
             Quaternion startRotation = transform.rotation;
             float dAngle = 0;
@@ -52,19 +55,39 @@ public class gBotController : MonoBehaviour {
                 angle = Random.Range(1.0f, 20.0f);
             }
 
-            while(dAngle < angle)
+            while (dAngle < angle)
             {
                 dAngle += rotationSpeed * Time.deltaTime;
                 dAngle = Mathf.Min(dAngle, angle);
 
-                transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, axis);
+                transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
 
                 yield return null;
             }
             spinning = false;
             count++;
-
-            yield return new WaitForSeconds(5);
         }
+    }
+
+    IEnumerator OnCollisionEnter2D(Collision2D coll)
+    {
+        print("collided!");
+        StopCoroutine(RotateBot());
+        float rotationSpeed = 180 / 2;
+        spinning = true;
+        Quaternion startRotation = transform.rotation;
+        float dAngle = 0;
+        rb2d.velocity = Vector2.zero;
+        while (dAngle < 180)
+        {
+            //print("here");
+            dAngle += rotationSpeed * Time.deltaTime;
+            dAngle = Mathf.Min(dAngle, 180);
+
+            transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
+            yield return null;
+        }
+        spinning = false;
+        StartCoroutine(RotateBot());
     }
 }
