@@ -9,12 +9,15 @@ public class GameManager : MonoBehaviour {
   public int numElements;
   public float radius;
   public Text scoreText;
+  public Text timeText;
 
   private int score;
+  private int timeLeft;
 
   // Use this for initialization
   void Start () {
     score = 120;
+    timeLeft = 600;
 
     float step = (2 * Mathf.PI) / numElements;
     float angle = 0;
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviour {
     }
 
     SetCountText();
+    StartCoroutine(LoseTime());
   }
 
   void SetCountText() {
@@ -37,7 +41,18 @@ public class GameManager : MonoBehaviour {
   }
   // Update is called once per frame
   void Update () {
+    timeText.text = "Time: " + timeLeft.ToString();
+  }
 
+  IEnumerator LoseTime(){
+    while(true) {
+      yield return new WaitForSeconds(1);
+      timeLeft--;
+      if(timeLeft % 60 == 0) {
+        score -= 1;
+        SetCountText();
+      }
+    }
   }
 
   void OnCollisionEnter2D(Collision2D coll) {
