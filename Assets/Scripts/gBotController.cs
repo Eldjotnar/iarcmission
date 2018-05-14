@@ -16,7 +16,7 @@ public class gBotController : MonoBehaviour {
         //yield return new WaitForSeconds(5);
         StartCoroutine(RotateBot()); // this will have to be dependent on starting orientation i think
     }
-	
+
 	// Update is called once per frame
 	void Update () {
         //transform.Rotate(new Vector3(0, 0, 45) * Time.deltaTime);
@@ -69,9 +69,9 @@ public class gBotController : MonoBehaviour {
         }
     }
 
-    IEnumerator OnCollisionEnter2D(Collision2D coll)
+    void OnCollisionEnter2D(Collision2D coll)
     {
-        print("collided!");
+        // print("collided!");
         StopCoroutine(RotateBot());
         float rotationSpeed = 180 / 2;
         spinning = true;
@@ -85,7 +85,7 @@ public class gBotController : MonoBehaviour {
             dAngle = Mathf.Min(dAngle, 180);
 
             transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
-            yield return null;
+            // yield return null;
         }
         spinning = false;
         StartCoroutine(RotateBot());
