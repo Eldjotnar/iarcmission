@@ -1,33 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-    public GameObject gRobot;
-    public int numElements;
-    public float radius;
+  public GameObject gRobot;
+  public int numElements;
+  public float radius;
+  public Text scoreText;
 
-	// Use this for initialization
-	void Start () {
-        float step = (2 * Mathf.PI) / numElements;
-        float angle = 0;
+  private int score;
 
-        for(int i =0; i < numElements; i++)
-        {
-            float x = radius * Mathf.Cos(angle);
-            float y = radius * Mathf.Sin(angle);
-            //print(angle);
+  // Use this for initialization
+  void Start () {
+    score = 120;
 
-            GameObject newObject = (GameObject)Instantiate(gRobot, new Vector3(x, y, 0), Quaternion.Euler(0,0,angle*180/Mathf.PI));
+    float step = (2 * Mathf.PI) / numElements;
+    float angle = 0;
 
-            angle += step;
-        }
+    for(int i =0; i < numElements; i++) {
+      float x = radius * Mathf.Cos(angle);
+      float y = radius * Mathf.Sin(angle);
+      //print(angle);
 
+      GameObject newObject = (GameObject)Instantiate(gRobot, new Vector3(x, y, 0), Quaternion.Euler(0,0,angle*180/Mathf.PI));
+
+      angle += step;
     }
 
-	// Update is called once per frame
-	void Update () {
+    SetCountText();
+  }
 
-	}
+  void SetCountText() {
+    scoreText.text = "Score: " + score.ToString();
+  }
+  // Update is called once per frame
+  void Update () {
+
+  }
+
+  void OnCollisionEnter2D(Collision2D coll) {
+    print(coll.gameObject.name);
+    if(coll.gameObject.transform.position.x < 4.7 && coll.gameObject.transform.position.x > -4.7) {
+      if(coll.gameObject.transform.position.y < 0) {
+        score -= 10;
+      } else {
+        score += 20;
+      }
+    }
+    SetCountText();
+    //if(coll.gameObject.transform.position.y < 0 ) {}
+    print(coll.gameObject.transform.position.y);
+    Destroy(coll.gameObject);
+  }
 }

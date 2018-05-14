@@ -16,7 +16,7 @@ public class gBotController : MonoBehaviour {
     void Start () {
         rb2d = GetComponent<Rigidbody2D>();
         //yield return new WaitForSeconds(5);
-        rotations = StartCoroutine(RotateBot()); // this will have to be dependent on starting orientation i think
+        //rotations = StartCoroutine(RotateBot()); // this will have to be dependent on starting orientation i think
     }
 
 	// Update is called once per frame
@@ -71,26 +71,26 @@ public class gBotController : MonoBehaviour {
         }
     }
 
-    IEnumerator OnCollisionEnter2D(Collision2D coll)
-    {
-        // print("collided!");
-        StopCoroutine(rotations);
-        float rotationSpeed = 180 / 2;
-        spinning = true;
-        Quaternion startRotation = transform.rotation;
-        float dAngle = 0;
-        rb2d.velocity = Vector2.zero;
-        rb2d.angularVelocity = 0f;
-        while (dAngle < 180)
-        {
-            //print("here");
-            dAngle += rotationSpeed * Time.deltaTime;
-            dAngle = Mathf.Min(dAngle, 180);
-
-            transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
-            yield return null;
-        }
-        spinning = false;
-        rotations = StartCoroutine(RotateBot());
-    }
+    // IEnumerator OnCollisionEnter2D(Collision2D coll)
+    // {
+    //     print(coll.gameObject.name);
+    //     StopCoroutine(rotations);
+    //     float rotationSpeed = 180 / 2;
+    //     spinning = true;
+    //     Quaternion startRotation = transform.rotation;
+    //     float dAngle = 0;
+    //     rb2d.velocity = Vector2.zero;
+    //     rb2d.angularVelocity = 0f;
+    //     while (dAngle < 180)
+    //     {
+    //         //print("here");
+    //         dAngle += rotationSpeed * Time.deltaTime;
+    //         dAngle = Mathf.Min(dAngle, 180);
+    //
+    //         transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
+    //         yield return null;
+    //     }
+    //     spinning = false;
+    //     rotations = StartCoroutine(RotateBot());
+    // }
 }
