@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour {
       //print(angle);
 
       GameObject newObject = (GameObject)Instantiate(gRobot, new Vector3(x, y, 0), Quaternion.Euler(0,0,angle*180/Mathf.PI));
-            newObject.tag = "gBot"+i;
+      newObject.name = "gBot"+i.ToString();
 
       angle += step;
     }
