@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour {
 
       angle += step;
     }
-
     SetCountText();
     StartCoroutine(LoseTime());
   }
