@@ -6,8 +6,11 @@ using System.Linq;
 public class Drone_naive : MonoBehaviour {
 	//string mode = "naive";
 	public float speed;
-	private Transform target;
+	private GameObject target;
 	private LineRenderer line;
+	//private GameObject target;
+	bool tapped = false;
+
 	//private Collider droneCollider;
 
 	public Color c1 = Color.yellow;
@@ -31,33 +34,38 @@ public class Drone_naive : MonoBehaviour {
             );
         lineRenderer.colorGradient = gradient;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		findAll();
+		findBot("gBot0");
+		if(target) {
+			Vector3 diff = target.transform.position - transform.position;
+			if(!tapped && diff.magnitude < 0.01) {
+				print("Tapping!");
+				target.SendMessage("spinRobot", 45);
+				tapped = true;
+			} else if(!tapped) {
+				diff.Normalize();
 
-	}
+	      float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+	      transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+				transform.position += transform.up * speed * Time.deltaTime;
+			}
+			//print(diff.magnitude);
 
-	void tapFirst(string b){
-		target = GameObject.Find(b).transform;
-		if(target){
-			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target.position -transform.position), 
-					speed * Time.deltaTime);
-				transform.position += transform.forward * speed * Time.deltaTime;
-			tapBot();
 		}
 	}
 
-    void tapBot() {
-        var at = target.GetComponent<botAttributes>();
-        at.tapMe();
-    }
+	void findBot(string b){
+		target = GameObject.Find(b);
+	}
 
 //Not used right now...
 	void findAll(){
 		var all = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name.Contains("gBot")).ToList();
-		var sorted = prioritize(all);
-		//var sorted = all.OrderBy(go=>go.transform.position.y).ToList();
+		//var sorted = prioritize(all);
+		var sorted = all.OrderBy(go=>go.transform.position.y).ToList();
 		List<GameObject> temp = sorted;
 		temp.Insert(0, this.gameObject);
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
@@ -65,7 +73,7 @@ public class Drone_naive : MonoBehaviour {
         for (int i = 0, i_end=temp.Count(); i < i_end; i++) {
             lineRenderer.SetPosition(i, temp.ElementAt(i).transform.position);
         }
-		tapFirst(temp.ElementAt(0).name);
+		
 	}
 
 	List<GameObject> prioritize(List<GameObject> temp){
