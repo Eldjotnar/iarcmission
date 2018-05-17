@@ -37,11 +37,19 @@ public class Drone_naive : MonoBehaviour {
 			//print(diff.magnitude);
 
 		}
+        tapBot();
 	}
 
 	void findBot(string b){
 		target = GameObject.Find(b);
 	}
+
+    void tapBot() {
+        findBot("gBot0");
+        var at = target.GetComponent<botAttributes>();
+        at.tapMe();
+    }
+
 //Not used right now...
 	void findAll(){
 		var foundObjects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name.Contains("gBot"));
