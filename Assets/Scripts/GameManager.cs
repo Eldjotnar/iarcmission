@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour {
     score = 120;
     timeLeft = 600;
 
+    //gRobot.AddComponent<BotAtts>();
+
     float step = (2 * Mathf.PI) / numElements;
     float angle = 0;
 
