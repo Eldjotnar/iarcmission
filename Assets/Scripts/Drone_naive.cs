@@ -6,30 +6,42 @@ using System.Linq;
 public class Drone_naive : MonoBehaviour {
 	//string mode = "naive";
 	public float speed;
-	private Transform target;
+	private GameObject target;
+	bool tapped = false;
 
 	//private Collider droneCollider;
 	// Use this for initialization
 	void Start () {
-		
+
 		//droneCollider = GetComponent<Collider>();
 		//droneCollider.enabled = false
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
 		findBot("gBot0");
-		if(target){
-			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target.position -transform.position), 
-				speed * Time.deltaTime);
-			transform.position += transform.forward * speed * Time.deltaTime;
+		if(target) {
+			Vector3 diff = target.transform.position - transform.position;
+			if(!tapped && diff.magnitude < 0.01) {
+				print("Tapping!");
+				target.SendMessage("spinRobot", 45);
+				tapped = true;
+			} else if(!tapped) {
+				diff.Normalize();
+
+	      float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+	      transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+				transform.position += transform.up * speed * Time.deltaTime;
+			}
+			//print(diff.magnitude);
+
 		}
         tapBot();
 	}
 
 	void findBot(string b){
-		target = GameObject.Find(b).transform;
+		target = GameObject.Find(b);
 	}
 
     void tapBot() {
