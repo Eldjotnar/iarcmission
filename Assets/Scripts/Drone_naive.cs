@@ -25,7 +25,7 @@ public class Drone_naive : MonoBehaviour {
 				speed * Time.deltaTime);
 			transform.position += transform.forward * speed * Time.deltaTime;
 		}
-        //tapBot();
+        tapBot();
 	}
 
 	void findBot(string b){
@@ -34,8 +34,8 @@ public class Drone_naive : MonoBehaviour {
 
     void tapBot() {
         findBot("gBot0");
-        //target.GetComponent(BotAtts);
-        //target.BotAtts.tapMe();
+        var at = target.GetComponent<botAttributes>();
+        at.tapMe();
     }
 
 //Not used right now...
