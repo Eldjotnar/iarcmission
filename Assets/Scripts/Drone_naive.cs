@@ -7,7 +7,6 @@ public class Drone_naive : MonoBehaviour {
 	//string mode = "naive";
 	public float speed;
 	private GameObject target;
-	bool tapped = false;
 
 	//private Collider droneCollider;
 	// Use this for initialization
@@ -23,26 +22,12 @@ public class Drone_naive : MonoBehaviour {
 		findBot("gBot3");
 		if(target) {
 			Vector3 diff = target.transform.position - transform.position;
-			// if(!tapped && diff.magnitude < 0.01) { // if over the bot
-			// 	//print(target.transform.eulerAngles.z);
-			// 	if(target.transform.eulerAngles.z > 180) { // if bot is heading the wrong way
-			// 		print("Tapping!");
-			//
-			// 		target.SendMessage("spinRobot", 180);
-			// 		//tapped = true;
-			// 	}
-				// print("Tapping!");
-				// target.SendMessage("spinRobot", 45);
-				// tapped = true;
-			// } else if(!tapped) {
+			if(diff.magnitude > 0.01) {
 				diff.Normalize();
-
-	      float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+				float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
 	      transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
-				transform.position += transform.up * speed * Time.deltaTime;
-			// }
-			//print(diff.magnitude);
-
+			}
+			transform.position += transform.up * speed * Time.deltaTime;
 		}
 	}
 
@@ -50,11 +35,15 @@ public class Drone_naive : MonoBehaviour {
 		while(true) {
 			yield return new WaitForSeconds(6);
 			print("checking directions");
-			print(target.transform.eulerAngles.z);
-			Vector3 diff = target.transform.position - transform.position;
-			if(target.transform.eulerAngles.z > 180) {
+			float botHeading = target.transform.eulerAngles.z;
+			//print(target.transform.eulerAngles.z);
+			//Vector3 diff = target.transform.position - transform.position;
+			if(botHeading > 180) {
 				print("Tapping!");
 				target.SendMessage("spinRobot", 180);
+			} else if(botHeading > 90 && botHeading < 180) { // check if bot is in 2nd quadrant
+				print("Light tapping");
+				target.SendMessage("spinRobot", 45);
 			}
 		}
 	}
