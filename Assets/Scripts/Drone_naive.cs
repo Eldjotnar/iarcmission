@@ -29,11 +29,19 @@ public class Drone_naive : MonoBehaviour {
 				speed * Time.deltaTime);
 			transform.position += transform.forward * speed * Time.deltaTime;
 		}
+        tapBot();
 	}
 
 	void findBot(string b){
 		target = GameObject.Find(b).transform;
 	}
+
+    void tapBot() {
+        findBot("gBot0");
+        var at = target.GetComponent<botAttributes>();
+        at.tapMe();
+    }
+
 //Not used right now...
 	void findAll(){
 		var allRoombas = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name.Contains("gBot"));

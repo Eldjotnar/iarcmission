@@ -34,9 +34,10 @@ public class gBotController : MonoBehaviour {
     //print(rb2d.rotation);
   }
 
-  IEnumerator RotateBot() {
+  public IEnumerator RotateBot() {
     float angle;
     float rotationSpeed = 180 / 2;
+        print("SPINNING!");
     while (true) {
       yield return new WaitForSeconds(5);
 
