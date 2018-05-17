@@ -12,6 +12,7 @@ public class gBotController : MonoBehaviour {
   private float rotationSpeed = 180/2; // 180 degrees/2 seconds
 
   Coroutine rotations = null;
+  bool rotationsRunning = false;
 
   // Use this for initialization
   IEnumerator Start () {
@@ -36,6 +37,7 @@ public class gBotController : MonoBehaviour {
   }
 
   IEnumerator RotateBot() {
+    rotationsRunning = true;
     float angle;
     //float rotationSpeed = 180 / 2;
     while (true) {
@@ -89,7 +91,10 @@ public class gBotController : MonoBehaviour {
 
     IEnumerator spinRobot(int angle) {
       print("spinning robot");
-      StopCoroutine(rotations);
+      if(rotationsRunning) {
+        StopCoroutine(rotations);
+      }
+      //StopCoroutine(rotations);
 
       spinning = true;
       Quaternion startRotation = transform.rotation;
@@ -99,6 +104,7 @@ public class gBotController : MonoBehaviour {
       rb2d.angularVelocity = 0f;
 
       print(dAngle + " vs " + angle);
+
       while (dAngle < angle) {
         dAngle += rotationSpeed * Time.deltaTime;
         dAngle = Mathf.Min(dAngle, angle);
@@ -108,8 +114,6 @@ public class gBotController : MonoBehaviour {
       }
 
       spinning = false;
-      print("done spinning");
-      // note to future me: this is never reached - is called but does not spin
       rotations = StartCoroutine(RotateBot());
     }
   }
