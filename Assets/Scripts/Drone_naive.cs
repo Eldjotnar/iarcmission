@@ -37,7 +37,6 @@ public class Drone_naive : MonoBehaviour {
 			//print(diff.magnitude);
 
 		}
-        tapBot();
 	}
 
 	void findBot(string b){
