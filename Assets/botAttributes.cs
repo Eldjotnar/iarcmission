@@ -19,5 +19,8 @@ public class botAttributes : MonoBehaviour {
     public void tapMe()
     {
         tapped = true;
+        var b = GameObject.Find("gBot0").transform;
+        var c = b.GetComponent<gBotController>();
+        c.RotateBot(); //this might not yet be working...
     }
 }
