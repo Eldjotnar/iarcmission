@@ -227,12 +227,12 @@ Prefab:
     - target: {fileID: 212036925732714454, guid: 6fcdce308f470334db1b0c2c67ffe154,
         type: 2}
       propertyPath: m_SortingLayerID
-      value: 2084268663
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 212036925732714454, guid: 6fcdce308f470334db1b0c2c67ffe154,
         type: 2}
       propertyPath: m_SortingLayer
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 58991840215381252, guid: 6fcdce308f470334db1b0c2c67ffe154,
         type: 2}
@@ -724,6 +724,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2.5
+  c1: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  c2: {r: 1, g: 0, b: 0, a: 1}
+  lengthOfLineRenderer: 10
 --- !u!1 &702223085
 GameObject:
   m_ObjectHideFlags: 0
