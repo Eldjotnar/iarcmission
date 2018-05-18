@@ -20,7 +20,7 @@ public class Drone_naive : MonoBehaviour {
 	List<GameObject> roombas; //retired
 	// Use this for initialization
 	void Start () {
-		index = 0;
+		index = 1;
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
 		lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
 		lineRenderer.widthMultiplier = 0.02f;
@@ -56,8 +56,13 @@ public class Drone_naive : MonoBehaviour {
 		}
 	}
 	void findNext(){
-		if(index >= roombas.Count()){
-			index = 0;
+		if(index >= 5){
+			if (roombas.Count() < 5){
+				index = roombas.Count();
+			}
+			else{
+				index = 1;
+			}
 		}
 		target = roombas.ElementAt(index);
 		++index;
