@@ -70,7 +70,8 @@ public class Drone_naive : MonoBehaviour {
 			    botHeading = target.transform.eulerAngles.z;
             }
             catch(MissingReferenceException){
-                findBot("gBot2");
+                findNext();
+                botHeading = target.transform.eulerAngles.z;
             }
 			gBotController cs = target.GetComponent<gBotController>();
 			bool spinning = cs.spinning;
