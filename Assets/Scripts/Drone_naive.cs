@@ -44,10 +44,7 @@ public class Drone_naive : MonoBehaviour {
 		roombas = findBots();
 		greedySort(ref roombas);
 		visualizeLines(ref roombas);
-		//updateAll();
-		//findBot("gBot0");
-		//findBot("gBot1");
-		//target = roombas.ElementAt(1);
+
 		if(target) {
 			Vector3 diff = target.transform.position - transform.position;
 			if(diff.magnitude > 0.01) {
