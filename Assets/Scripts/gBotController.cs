@@ -105,9 +105,7 @@ public class gBotController : MonoBehaviour {
 
   IEnumerator spinRobotFromDrone(int angle) {
     if(!spinning) {
-      if(rotationsRunning) {
-        StopCoroutine(rotations);
-      }
+      StopCoroutine(rotations);
 
       spinning = true;
       Quaternion startRotation = transform.rotation;
