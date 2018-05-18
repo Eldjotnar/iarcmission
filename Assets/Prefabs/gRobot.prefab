@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114278615523240730}
   - component: {fileID: 50915410164493452}
   - component: {fileID: 58991840215381252}
+  - component: {fileID: 114517622197751488}
   m_Layer: 0
   m_Name: gRobot
   m_TagString: Untagged
@@ -79,6 +80,17 @@ CircleCollider2D:
   serializedVersion: 2
   m_Radius: 0.8520007
 --- !u!114 &114278615523240730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1172511487194716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30e3d492195feac4fa62b43760a437c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114517622197751488
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
