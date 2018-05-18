@@ -32,7 +32,7 @@ public class Drone_naive : MonoBehaviour {
             new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
             );
         lineRenderer.colorGradient = gradient;
-		InvokeRepeating("findBot", 1.0f, 5.0f);
+		InvokeRepeating("findNext", 1.0f, 5.0f);
 	}
 
 	// Update is called once per frame
@@ -44,9 +44,9 @@ public class Drone_naive : MonoBehaviour {
 		//findBot("gBot0");
 	}
 	
-	void findBot(){
+	void findNext(){
 		
-		target = GameObject.Find(roombas.ElementAt(0).name);
+		target = roombas.ElementAt(0);
 		if(target) {
 			Vector3 diff = target.transform.position - transform.position;
 			if(!tapped && diff.magnitude < 0.01) {
@@ -71,9 +71,9 @@ public class Drone_naive : MonoBehaviour {
 	}
 	
 	void greedySort(ref List<GameObject> bots){
-		//bots = prioritize(ref bots);
-		bots = bots.OrderBy(go=>go.transform.position.y).ToList();
-		bots.Reverse();
+		prioritize(ref bots);
+		//bots = bots.OrderBy(go=>go.transform.position.y).ToList();
+		//bots.Reverse();
 	}
 
 	void visualizeLines(ref List<GameObject> bots){
@@ -87,26 +87,30 @@ public class Drone_naive : MonoBehaviour {
         }	
 	}
 
-	List<GameObject> prioritize(ref List<GameObject> temp){
+	void prioritize(ref List<GameObject> temp){
 		//prioritize according to bot closest to green line
-		List<GameObject> sorted = new List<GameObject>();
-		sorted.Add(temp[0]);
+		List<GameObject> sorted = new List<GameObject>{temp[0]};
+		//sorted.Add(temp[0]);
+		bool found = false;
 		for(int i=0, i_end=temp.Count(); i<i_end; ++i){
+			found = false;
 			float from = temp[i].transform.position.y;
 			float to = 4.7f;
 			float diff1 = to - from;
 
-			for(int j=0; j<i; ++j){
+			for(int j=0, j_end=sorted.Count(); j<j_end; ++j){
 				from = sorted[j].transform.position.y;
-				to = 4.7f;
+				//to = 4.7f;
 				float diff2 = to - from;
 				if(diff1 < diff2){
 					sorted.Insert(j, temp[i]);
+					found = true;
 					break;
 				}
 			}
+			if(found) continue;
+			sorted.Add(temp[i]);
 		}
-		return sorted;
-		//roombas = sorted;
+		temp = sorted;
 	}
 }
