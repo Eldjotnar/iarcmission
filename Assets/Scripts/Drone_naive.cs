@@ -75,10 +75,8 @@ public class Drone_naive : MonoBehaviour {
 				//Debug.Log(spinning);
             }
             catch(MissingReferenceException){
-                target = roombas.ElementAt(2);
-				botHeading = target.transform.eulerAngles.z;
-				cs = target.GetComponent<gBotController>();
-				spinning = cs.spinning;
+                findNext();
+                botHeading = target.transform.eulerAngles.z;
             }
 			
 
