@@ -31,7 +31,7 @@ public class gBotController : MonoBehaviour {
   // rotate randomly every 5 seconds
   IEnumerator trajNoise() {
     float angle;
-    rotationsRunning = true;
+    //rotationsRunning = true;
     while (true) {
       yield return new WaitForSeconds(5);
 
@@ -42,22 +42,66 @@ public class gBotController : MonoBehaviour {
         angle = Random.Range(1.0f, 20.0f);
       }
 
-      StartCoroutine(spinRobot((int)angle));
+      //StopCoroutine(rotations);
+      spinning = true;
+      Quaternion startRotation = transform.rotation;
+      float dAngle = 0;
+
+      // stop the velocity to avoid moving in circles
+      rb2d.velocity = Vector2.zero;
+      rb2d.angularVelocity = 0f;
+
+      // actually animate the rotation
+      while (dAngle < angle) {
+        dAngle += rotationSpeed * Time.deltaTime;
+        dAngle = Mathf.Min(dAngle, angle);
+
+        transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
+        yield return null;
+      }
+
+      // resume regular movement
+      spinning = false;
+
+      //StartCoroutine(spinRobot((int)angle));
       count++;
     }
   }
 
   // if the robot hits something, turn around
-  void OnCollisionEnter2D(Collision2D coll) {
-    StartCoroutine(spinRobot(180));
+  IEnumerator OnCollisionEnter2D(Collision2D coll) {
+    // StartCoroutine(spinRobot(180));
+    int angle = 180;
+    spinning = true;
+    StopCoroutine(rotations);
+    Quaternion startRotation = transform.rotation;
+    float dAngle = 0;
+
+    // stop the velocity to avoid moving in circles
+    rb2d.velocity = Vector2.zero;
+    rb2d.angularVelocity = 0f;
+
+    // actually animate the rotation
+    while (dAngle < angle) {
+      dAngle += rotationSpeed * Time.deltaTime;
+      dAngle = Mathf.Min(dAngle, angle);
+
+      transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
+      yield return null;
+    }
+
+    // resume regular movement
+    spinning = false;
+    rotations = StartCoroutine(trajNoise());
   }
 
   // rotate robot around to certain heading
   IEnumerator spinRobot(int angle) {
-    if(rotationsRunning) {
-      StopCoroutine(rotations);
-    }
+    // if(rotationsRunning) {
+    //   StopCoroutine(rotations);
+    // }
 
+    StopCoroutine(rotations);
     spinning = true;
     Quaternion startRotation = transform.rotation;
     float dAngle = 0;
@@ -79,38 +123,33 @@ public class gBotController : MonoBehaviour {
     spinning = false;
     rotations = StartCoroutine(trajNoise());
   }
-}
 
-/* 
-IEnumerator spinRobotFromDrone(int angle) {
-  if(spinning){
-    yield return null;
-  }
-    if(rotationsRunning) {
-      StopCoroutine(rotations);
+  IEnumerator spinRobotFromDrone(int angle) {
+    if(!spinning) {
+      if(rotationsRunning) {
+        StopCoroutine(rotations);
+      }
+
+      spinning = true;
+      Quaternion startRotation = transform.rotation;
+      float dAngle = 0;
+
+      // stop the velocity to avoid moving in circles
+      rb2d.velocity = Vector2.zero;
+      rb2d.angularVelocity = 0f;
+
+      // actually animate the rotation
+      while (dAngle < angle) {
+        dAngle += rotationSpeed * Time.deltaTime;
+        dAngle = Mathf.Min(dAngle, angle);
+
+        transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
+        yield return null;
+      }
+
+      // resume regular movement
+      spinning = false;
+      rotations = StartCoroutine(trajNoise());
     }
-
-    spinning = true;
-    Quaternion startRotation = transform.rotation;
-    float dAngle = 0;
-
-    // stop the velocity to avoid moving in circles
-    rb2d.velocity = Vector2.zero;
-    rb2d.angularVelocity = 0f;
-
-    // actually animate the rotation
-    while (dAngle < angle) {
-      dAngle += rotationSpeed * Time.deltaTime;
-      dAngle = Mathf.Min(dAngle, angle);
-
-      transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
-      yield return null;
-    }
-
-    // resume regular movement
-    spinning = false;
-    rotations = StartCoroutine(trajNoise());
   }
 }
- */
-
