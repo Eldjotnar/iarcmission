@@ -33,6 +33,9 @@ public class Drone_naive : MonoBehaviour {
             );
         lineRenderer.colorGradient = gradient;
 		InvokeRepeating("findNext", 1.0f, 5.0f);
+
+		StartCoroutine(directBot());
+		//findBot("gBot3");
 	}
 
 	// Update is called once per frame
@@ -42,32 +45,53 @@ public class Drone_naive : MonoBehaviour {
 		visualizeLines(ref roombas);
 		//updateAll();
 		//findBot("gBot0");
-	}
-	
-	void findNext(){
-		
-		target = roombas.ElementAt(0);
+		//findBot("gBot1");
+		//target = roombas.ElementAt(1);
 		if(target) {
 			Vector3 diff = target.transform.position - transform.position;
-			if(!tapped && diff.magnitude < 0.01) {
-				print("Tapping!");
-				target.SendMessage("spinRobot", 45);
-				tapped = true;
-			} else if(!tapped) {
+			if(diff.magnitude > 0.01) {
 				diff.Normalize();
-
-	      float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+				float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
 	      transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
-				transform.position += transform.up * speed * Time.deltaTime;
 			}
-			//print(diff.magnitude);
+			transform.position += transform.up * speed * Time.deltaTime;
+		}
+	}
+	void findNext(){
+		target = roombas.ElementAt(1);
+	}
 
+	IEnumerator directBot() {
+        float botHeading=0;
+		while(true) {
+			yield return new WaitForSeconds(6);
+			print("checking directions");
+            try{
+			    botHeading = target.transform.eulerAngles.z;
+            }
+            catch(MissingReferenceException){
+                findBot("gBot2");
+            }
+			gBotController cs = target.GetComponent<gBotController>();
+			bool spinning = cs.spinning;
+			//Debug.Log(spinning);
+
+			if(botHeading > 180 && !spinning) {
+				print("Tapping!");
+				target.SendMessage("spinRobot", 180);
+			} else if(botHeading > 90 && botHeading < 180) { // check if bot is in 2nd quadrant
+				print("Light tapping");
+				target.SendMessage("spinRobot", 45);
+			}
 		}
 	}
 
 	List<GameObject> findBots(){
 		var all = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name.Contains("gBot")).ToList();
 		return all;
+	}
+	void findBot(string b) {
+		target = GameObject.Find(b);
 	}
 	
 	void greedySort(ref List<GameObject> bots){

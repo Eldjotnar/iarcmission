@@ -6,7 +6,7 @@ public class gBotController : MonoBehaviour {
   private Rigidbody2D rb2d;
   private Vector2 newVel;
   private float speed = 0.13f;
-  private bool spinning = false;
+  public bool spinning = false;
   private int count = 1;
   private float rotationSpeed = 180/2; // 180 degrees/2 seconds
 
@@ -80,3 +80,37 @@ public class gBotController : MonoBehaviour {
     rotations = StartCoroutine(trajNoise());
   }
 }
+
+/* 
+IEnumerator spinRobotFromDrone(int angle) {
+  if(spinning){
+    yield return null;
+  }
+    if(rotationsRunning) {
+      StopCoroutine(rotations);
+    }
+
+    spinning = true;
+    Quaternion startRotation = transform.rotation;
+    float dAngle = 0;
+
+    // stop the velocity to avoid moving in circles
+    rb2d.velocity = Vector2.zero;
+    rb2d.angularVelocity = 0f;
+
+    // actually animate the rotation
+    while (dAngle < angle) {
+      dAngle += rotationSpeed * Time.deltaTime;
+      dAngle = Mathf.Min(dAngle, angle);
+
+      transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
+      yield return null;
+    }
+
+    // resume regular movement
+    spinning = false;
+    rotations = StartCoroutine(trajNoise());
+  }
+}
+ */
+

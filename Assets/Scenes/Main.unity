@@ -285,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164106749916a3c4a9fe2c5ab219c7e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gRobot: {fileID: 1172511487194716, guid: 2db3be7917c21264fa121bfc1919a0de, type: 2}
+  gRobot: {fileID: 1264916199053114, guid: 2db3be7917c21264fa121bfc1919a0de, type: 2}
   numElements: 10
   radius: 0.5
   scoreText: {fileID: 305692604}
