@@ -32,11 +32,40 @@ public class Drone_naive : MonoBehaviour {
 	}
 
 	IEnumerator directBot() {
+        float botHeading;
+        bool switching_gbots=false;
 		while(true) {
-			yield return new WaitForSeconds(6);
+            Loop:
+            if(switching_gbots) {
+	            Vector3 diff = target.transform.position - transform.position;
+	            if(diff.magnitude > 0.01) {
+		            diff.Normalize();
+		            float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+	            transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+	            }
+	            transform.position += transform.up * speed * Time.deltaTime;
+                if((transform.position - target.transform.position).magnitude < 10){
+                    switching_gbots = false;
+                }
+                else{
+                    goto Loop;
+                }
+
+            }
+		    yield return new WaitForSeconds(6);
 			print("checking directions");
-			float botHeading = target.transform.eulerAngles.z;
-			//print(target.transform.eulerAngles.z);
+            try 
+	            {	        
+					botHeading = target.transform.eulerAngles.z;
+	            }
+	        catch (System.NullReferenceException)
+	            {
+                    print("SWITCHING gBOTS!");
+                    switching_gbots=true;
+                    findBot("gBot4");
+                    goto Loop;
+	            }
+            //print(target.transform.eulerAngles.z);
 			//Vector3 diff = target.transform.position - transform.position;
 			if(botHeading > 180) {
 				print("Tapping!");
