@@ -6,6 +6,7 @@ using System.Linq;
 public class Drone_naive : MonoBehaviour {
 	//string mode = "naive";
 	public float speed;
+	//Drone object
 	private GameObject target;
 	private LineRenderer line;
 	//private GameObject target;
@@ -15,15 +16,13 @@ public class Drone_naive : MonoBehaviour {
 
 	public Color c1 = Color.yellow;
     public Color c2 = Color.red;
-    public int lengthOfLineRenderer = 10;
 
-	List<GameObject> roombas;
+	//List<GameObject> roombas; //retired
 	// Use this for initialization
 	void Start () {
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
         lineRenderer.widthMultiplier = 0.02f;
-        lineRenderer.positionCount = lengthOfLineRenderer;
 		
         // A simple 2 color gradient with a fixed alpha of 1.0f.
         float alpha = 1.0f;
@@ -37,8 +36,15 @@ public class Drone_naive : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		findAll();
-		findBot("gBot0");
+		List<GameObject> roombas = findBots();
+		greedySort(ref roombas);
+		visualizeLines(ref roombas);
+		//updateAll();
+		//findBot("gBot0");
+	}
+	
+	void findBot(string b){
+		target = GameObject.Find(b);
 		if(target) {
 			Vector3 diff = target.transform.position - transform.position;
 			if(!tapped && diff.magnitude < 0.01) {
@@ -57,30 +63,32 @@ public class Drone_naive : MonoBehaviour {
 		}
 	}
 
-	void findBot(string b){
-		target = GameObject.Find(b);
+	List<GameObject> findBots(){
+		var all = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name.Contains("gBot")).ToList();
+		return all;
+	}
+	
+	void greedySort(ref List<GameObject> bots){
+		//bots = prioritize(ref bots);
+		bots = bots.OrderBy(go=>go.transform.position.y).ToList();
 	}
 
-//Not used right now...
-	void findAll(){
-		var all = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name.Contains("gBot")).ToList();
-		//var sorted = prioritize(all);
-		var sorted = all.OrderBy(go=>go.transform.position.y).ToList();
-		List<GameObject> temp = sorted;
+	void visualizeLines(ref List<GameObject> bots){
+		List<GameObject> temp = bots;
 		temp.Insert(0, this.gameObject);
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
+		lineRenderer.positionCount = temp.Count();
 		//lineRenderer.SetPosition(0, transform.position);
         for (int i = 0, i_end=temp.Count(); i < i_end; i++) {
             lineRenderer.SetPosition(i, temp.ElementAt(i).transform.position);
-        }
-		
+        }	
 	}
 
-	List<GameObject> prioritize(List<GameObject> temp){
+	List<GameObject> prioritize(ref List<GameObject> temp){
 		//prioritize according to bot closest to green line
-		List<GameObject> sorted= null;
-		sorted.Insert(0, temp[0]);
-		for(int i=1, i_end=temp.Count(); i<i_end; ++i){
+		List<GameObject> sorted = new List<GameObject>();
+		sorted.Add(temp[0]);
+		for(int i=0, i_end=temp.Count(); i<i_end; ++i){
 			float from = temp[i].transform.position.y;
 			float to = 4.7f;
 			float diff1 = to - from;
