@@ -1,5 +1,7 @@
 # iarcmission
 
+Team: Andreas, Magnus, Hugo
+
 The business logic is located in Assets/Scripts/*.cs
 
 The language of implementation is C# which uses Unity for graphics. In order to compile and run the code, Unity needs to be manually installed. While Microsoft Visual Studio is not crucial, it is convenient to install Visual Studio with Unity, because they cooperate.
