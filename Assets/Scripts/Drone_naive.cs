@@ -11,7 +11,7 @@ public class Drone_naive : MonoBehaviour {
 	private LineRenderer line;
 	//private GameObject target;
 	bool tapped = false;
-
+	int index;
 	//private Collider droneCollider;
 
 	public Color c1 = Color.yellow;
@@ -20,6 +20,7 @@ public class Drone_naive : MonoBehaviour {
 	List<GameObject> roombas; //retired
 	// Use this for initialization
 	void Start () {
+		index = 0;
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
 		lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
 		lineRenderer.widthMultiplier = 0.02f;
@@ -58,7 +59,11 @@ public class Drone_naive : MonoBehaviour {
 		}
 	}
 	void findNext(){
-		target = roombas.ElementAt(1);
+		if(index >= roombas.Count()){
+			index = 0;
+		}
+		target = roombas.ElementAt(index);
+		++index;
 	}
 
 	IEnumerator directBot() {

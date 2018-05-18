@@ -248,6 +248,10 @@ Prefab:
       propertyPath: m_Name
       value: airDrone
       objectReference: {fileID: 0}
+    - target: {fileID: 1172511487194716, guid: 6fcdce308f470334db1b0c2c67ffe154, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114278615523240730, guid: 6fcdce308f470334db1b0c2c67ffe154, type: 2}
     - {fileID: 50915410164493452, guid: 6fcdce308f470334db1b0c2c67ffe154, type: 2}

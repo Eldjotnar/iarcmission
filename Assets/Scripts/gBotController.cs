@@ -69,30 +69,8 @@ public class gBotController : MonoBehaviour {
   }
 
   // if the robot hits something, turn around
-  IEnumerator OnCollisionEnter2D(Collision2D coll) {
-    // StartCoroutine(spinRobot(180));
-    int angle = 180;
-    spinning = true;
-    StopCoroutine(rotations);
-    Quaternion startRotation = transform.rotation;
-    float dAngle = 0;
-
-    // stop the velocity to avoid moving in circles
-    rb2d.velocity = Vector2.zero;
-    rb2d.angularVelocity = 0f;
-
-    // actually animate the rotation
-    while (dAngle < angle) {
-      dAngle += rotationSpeed * Time.deltaTime;
-      dAngle = Mathf.Min(dAngle, angle);
-
-      transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
-      yield return null;
-    }
-
-    // resume regular movement
-    spinning = false;
-    rotations = StartCoroutine(trajNoise());
+  void OnCollisionEnter2D(Collision2D coll) {
+    StartCoroutine(spinRobot(180));
   }
 
   // rotate robot around to certain heading
@@ -103,6 +81,7 @@ public class gBotController : MonoBehaviour {
 
     StopCoroutine(rotations);
     spinning = true;
+    StopCoroutine(rotations);
     Quaternion startRotation = transform.rotation;
     float dAngle = 0;
 
@@ -126,9 +105,7 @@ public class gBotController : MonoBehaviour {
 
   IEnumerator spinRobotFromDrone(int angle) {
     if(!spinning) {
-      if(rotationsRunning) {
-        StopCoroutine(rotations);
-      }
+      StopCoroutine(rotations);
 
       spinning = true;
       Quaternion startRotation = transform.rotation;
