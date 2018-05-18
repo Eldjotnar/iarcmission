@@ -22,7 +22,7 @@ public class Drone_naive : MonoBehaviour {
 	void Start () {
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
-        lineRenderer.widthMultiplier = 0.02f;
+        lineRenderer.widthMultiplier = 0.04f;
 		
         // A simple 2 color gradient with a fixed alpha of 1.0f.
         float alpha = 1.0f;
@@ -65,22 +65,28 @@ public class Drone_naive : MonoBehaviour {
         float botHeading=0;
 		while(true) {
 			yield return new WaitForSeconds(6);
-			print("checking directions");
+			//print("checking directions");
+			gBotController cs = null;
+			bool spinning = true;
             try{
 			    botHeading = target.transform.eulerAngles.z;
+				cs = target.GetComponent<gBotController>();
+				spinning = cs.spinning;
+				//Debug.Log(spinning);
             }
             catch(MissingReferenceException){
-                findBot("gBot2");
+                target = roombas.ElementAt(2);
+				botHeading = target.transform.eulerAngles.z;
+				cs = target.GetComponent<gBotController>();
+				spinning = cs.spinning;
             }
-			gBotController cs = target.GetComponent<gBotController>();
-			bool spinning = cs.spinning;
-			//Debug.Log(spinning);
+			
 
 			if(botHeading > 180 && !spinning) {
-				print("Tapping!");
+				//print("Tapping!");
 				target.SendMessage("spinRobot", 180);
 			} else if(botHeading > 90 && botHeading < 180) { // check if bot is in 2nd quadrant
-				print("Light tapping");
+				//print("Light tapping");
 				target.SendMessage("spinRobot", 45);
 			}
 		}
@@ -95,9 +101,9 @@ public class Drone_naive : MonoBehaviour {
 	}
 	
 	void greedySort(ref List<GameObject> bots){
-		prioritize(ref bots);
-		//bots = bots.OrderBy(go=>go.transform.position.y).ToList();
-		//bots.Reverse();
+		//prioritize(ref bots);
+		bots = bots.OrderBy(go=>go.transform.position.y).ToList();
+		bots.Reverse();
 	}
 
 	void visualizeLines(ref List<GameObject> bots){
