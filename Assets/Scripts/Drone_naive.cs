@@ -17,7 +17,7 @@ public class Drone_naive : MonoBehaviour {
 	public Color c1 = Color.yellow;
     public Color c2 = Color.red;
 
-	//List<GameObject> roombas; //retired
+	List<GameObject> roombas; //retired
 	// Use this for initialization
 	void Start () {
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
@@ -32,19 +32,21 @@ public class Drone_naive : MonoBehaviour {
             new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
             );
         lineRenderer.colorGradient = gradient;
+		InvokeRepeating("findBot", 1.0f, 5.0f);
 	}
 
 	// Update is called once per frame
 	void Update () {
-		List<GameObject> roombas = findBots();
+		roombas = findBots();
 		greedySort(ref roombas);
 		visualizeLines(ref roombas);
 		//updateAll();
 		//findBot("gBot0");
 	}
 	
-	void findBot(string b){
-		target = GameObject.Find(b);
+	void findBot(){
+		
+		target = GameObject.Find(roombas.ElementAt(0).name);
 		if(target) {
 			Vector3 diff = target.transform.position - transform.position;
 			if(!tapped && diff.magnitude < 0.01) {
@@ -71,6 +73,7 @@ public class Drone_naive : MonoBehaviour {
 	void greedySort(ref List<GameObject> bots){
 		//bots = prioritize(ref bots);
 		bots = bots.OrderBy(go=>go.transform.position.y).ToList();
+		bots.Reverse();
 	}
 
 	void visualizeLines(ref List<GameObject> bots){
