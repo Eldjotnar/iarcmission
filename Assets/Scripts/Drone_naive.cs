@@ -66,12 +66,13 @@ public class Drone_naive : MonoBehaviour {
 		while(true) {
 			yield return new WaitForSeconds(6);
 			print("checking directions");
-			try{
-				botHeading = target.transform.eulerAngles.z;
-			}
-			catch(MissingReferenceException){
-				findBot("gBot2");
-			}
+            try{
+			    botHeading = target.transform.eulerAngles.z;
+            }
+            catch(MissingReferenceException){
+                findNext();
+                botHeading = target.transform.eulerAngles.z;
+            }
 			gBotController cs = target.GetComponent<gBotController>();
 			bool spinning = cs.spinning;
 			//Debug.Log(spinning);
