@@ -4,20 +4,17 @@ using UnityEngine;
 
 using System.Linq;
 public class Drone_naive : MonoBehaviour {
-	//string mode = "naive";
 	public float speed;
-	//Drone object
-	private GameObject target;
+	private GameObject target; // drone object
 	private LineRenderer line;
-	//private GameObject target;
 	bool tapped = false;
 	int index;
-	//private Collider droneCollider;
-
+	public bool subSection;
+	public int subCount;
 	public Color c1 = Color.yellow;
 	public Color c2 = Color.red;
 
-	List<GameObject> roombas; //retired
+	List<GameObject> roombas;
 	// Use this for initialization
 	void Start () {
 		index = 1;
@@ -33,10 +30,12 @@ public class Drone_naive : MonoBehaviour {
 		new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
 		);
 		lineRenderer.colorGradient = gradient;
-		InvokeRepeating("findNext", 1.0f, 5.0f);
-
+		if(subSection){
+			InvokeRepeating("findNext", 1.0f, 5.0f);
+		} else{
+			InvokeRepeating("findNext_insubsection", 1.0f, 5.0f);
+		}
 		StartCoroutine(directBot());
-		//findBot("gBot3");
 	}
 
 	// Update is called once per frame
@@ -56,9 +55,13 @@ public class Drone_naive : MonoBehaviour {
 		}
 	}
 	void findNext(){
-		if(index >= 5){
-			if (roombas.Count() < 5){
-				index = roombas.Count();
+		target = roombas.ElementAt(index);
+	}
+
+	void findNext_insubsection(){
+		if(index >= subCount){
+			if (roombas.Count() < subCount){
+				subCount = roombas.Count();
 			}
 			else{
 				index = 1;
@@ -67,7 +70,6 @@ public class Drone_naive : MonoBehaviour {
 		target = roombas.ElementAt(index);
 		++index;
 	}
-
 	IEnumerator directBot() {
 		float botHeading=0;
 		while(true) {
@@ -106,9 +108,7 @@ public class Drone_naive : MonoBehaviour {
 	}
 
 	void greedySort(ref List<GameObject> bots){
-		//prioritize(ref bots);
-		bots = bots.OrderBy(go=>go.transform.position.y).ToList();
-		bots.Reverse();
+		prioritize(ref bots);
 	}
 
 	void visualizeLines(ref List<GameObject> bots){
@@ -116,7 +116,6 @@ public class Drone_naive : MonoBehaviour {
 		temp.Insert(0, this.gameObject);
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.positionCount = temp.Count();
-		//lineRenderer.SetPosition(0, transform.position);
 		for (int i = 0, i_end=temp.Count(); i < i_end; i++) {
 			lineRenderer.SetPosition(i, temp.ElementAt(i).transform.position);
 		}
@@ -125,7 +124,6 @@ public class Drone_naive : MonoBehaviour {
 	void prioritize(ref List<GameObject> temp){
 		//prioritize according to bot closest to green line
 		List<GameObject> sorted = new List<GameObject>{temp[0]};
-		//sorted.Add(temp[0]);
 		bool found = false;
 		for(int i=0, i_end=temp.Count(); i<i_end; ++i){
 			found = false;
@@ -135,7 +133,6 @@ public class Drone_naive : MonoBehaviour {
 
 			for(int j=0, j_end=sorted.Count(); j<j_end; ++j){
 				from = sorted[j].transform.position.y;
-				//to = 4.7f;
 				float diff2 = to - from;
 				if(diff1 < diff2){
 					sorted.Insert(j, temp[i]);
