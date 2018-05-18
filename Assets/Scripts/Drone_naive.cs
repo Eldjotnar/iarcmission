@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ public class Drone_naive : MonoBehaviour {
 	private LineRenderer line;
 	//private GameObject target;
 	bool tapped = false;
-
+	int index;
 	//private Collider droneCollider;
 
 	public Color c1 = Color.yellow;
@@ -20,6 +20,7 @@ public class Drone_naive : MonoBehaviour {
 	List<GameObject> roombas; //retired
 	// Use this for initialization
 	void Start () {
+		index = 1;
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
 		lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
 		lineRenderer.widthMultiplier = 0.02f;
@@ -43,10 +44,7 @@ public class Drone_naive : MonoBehaviour {
 		roombas = findBots();
 		greedySort(ref roombas);
 		visualizeLines(ref roombas);
-		//updateAll();
-		//findBot("gBot0");
-		//findBot("gBot1");
-		//target = roombas.ElementAt(1);
+
 		if(target) {
 			Vector3 diff = target.transform.position - transform.position;
 			if(diff.magnitude > 0.01) {
@@ -58,24 +56,36 @@ public class Drone_naive : MonoBehaviour {
 		}
 	}
 	void findNext(){
-		target = roombas.ElementAt(1);
+		if(index >= 5){
+			if (roombas.Count() < 5){
+				index = roombas.Count();
+			}
+			else{
+				index = 1;
+			}
+		}
+		target = roombas.ElementAt(index);
+		++index;
 	}
 
 	IEnumerator directBot() {
 		float botHeading=0;
 		while(true) {
 			yield return new WaitForSeconds(6);
-			print("checking directions");
+			//print("checking directions");
+			gBotController cs = null;
+			bool spinning = true;
             try{
 			    botHeading = target.transform.eulerAngles.z;
+				cs = target.GetComponent<gBotController>();
+				spinning = cs.spinning;
+				//Debug.Log(spinning);
             }
             catch(MissingReferenceException){
                 findNext();
                 botHeading = target.transform.eulerAngles.z;
             }
-			gBotController cs = target.GetComponent<gBotController>();
-			bool spinning = cs.spinning;
-			//Debug.Log(spinning);
+			
 
 			if(botHeading > 180 && !spinning) {
 				print("Tapping!");
@@ -96,9 +106,9 @@ public class Drone_naive : MonoBehaviour {
 	}
 
 	void greedySort(ref List<GameObject> bots){
-		prioritize(ref bots);
-		//bots = bots.OrderBy(go=>go.transform.position.y).ToList();
-		//bots.Reverse();
+		//prioritize(ref bots);
+		bots = bots.OrderBy(go=>go.transform.position.y).ToList();
+		bots.Reverse();
 	}
 
 	void visualizeLines(ref List<GameObject> bots){

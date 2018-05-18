@@ -294,6 +294,7 @@ MonoBehaviour:
   radius: 0.5
   scoreText: {fileID: 305692604}
   timeText: {fileID: 1145767900}
+  time_scale: 10
 --- !u!4 &168659480
 Transform:
   m_ObjectHideFlags: 0
