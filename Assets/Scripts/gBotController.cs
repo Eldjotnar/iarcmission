@@ -103,50 +103,6 @@ public class gBotController : MonoBehaviour {
     rotations = StartCoroutine(trajNoise());
   }
 
-<<<<<<< HEAD
-/*
-IEnumerator spinRobotFromDrone(int angle) {
-  if(spinning){
-    yield return null;
-  }
-    if(rotationsRunning) {
-      StopCoroutine(rotations);
-    }
-=======
-  // rotate robot around to certain heading
-  IEnumerator spinRobot(int angle) {
-    // if(rotationsRunning) {
-    //   StopCoroutine(rotations);
-    // }
->>>>>>> 39488c0952e0c6839238934e0e196a4d8a5fc8ca
-
-    StopCoroutine(rotations);
-    spinning = true;
-    Quaternion startRotation = transform.rotation;
-    float dAngle = 0;
-
-    // stop the velocity to avoid moving in circles
-    rb2d.velocity = Vector2.zero;
-    rb2d.angularVelocity = 0f;
-
-    // actually animate the rotation
-    while (dAngle < angle) {
-      dAngle += rotationSpeed * Time.deltaTime;
-      dAngle = Mathf.Min(dAngle, angle);
-
-      transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
-      yield return null;
-    }
-
-    // resume regular movement
-    spinning = false;
-    rotations = StartCoroutine(trajNoise());
-  }
-<<<<<<< HEAD
-}
- */
-=======
-
   IEnumerator spinRobotFromDrone(int angle) {
     if(!spinning) {
       if(rotationsRunning) {
@@ -176,4 +132,3 @@ IEnumerator spinRobotFromDrone(int angle) {
     }
   }
 }
->>>>>>> 39488c0952e0c6839238934e0e196a4d8a5fc8ca
