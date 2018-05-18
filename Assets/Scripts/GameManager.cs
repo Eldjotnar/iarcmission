@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
   void Start () {
     score = 120;
     timeLeft = 600;
+        Time.timeScale = 2;
 
     float step = (2 * Mathf.PI) / numElements;
     float angle = 0;

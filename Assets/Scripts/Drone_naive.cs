@@ -27,10 +27,16 @@ public class Drone_naive : MonoBehaviour {
 	}
 
 	IEnumerator directBot() {
+        float botHeading=0;
 		while(true) {
 			yield return new WaitForSeconds(6);
 			print("checking directions");
-			float botHeading = target.transform.eulerAngles.z;
+            try{
+			    botHeading = target.transform.eulerAngles.z;
+            }
+            catch(MissingReferenceException){
+                findBot("gBot2");
+            }
 			gBotController cs = target.GetComponent<gBotController>();
 			bool spinning = cs.spinning;
 
