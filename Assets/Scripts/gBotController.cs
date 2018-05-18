@@ -6,7 +6,7 @@ public class gBotController : MonoBehaviour {
   private Rigidbody2D rb2d;
   private Vector2 newVel;
   private float speed = 0.13f;
-  private bool spinning = false;
+  public bool spinning = false;
   private int count = 1;
   private float rotationSpeed = 180/2; // 180 degrees/2 seconds
 
@@ -31,7 +31,7 @@ public class gBotController : MonoBehaviour {
   // rotate randomly every 5 seconds
   IEnumerator trajNoise() {
     float angle;
-    rotationsRunning = true;
+    //rotationsRunning = true;
     while (true) {
       yield return new WaitForSeconds(5);
 
@@ -42,7 +42,28 @@ public class gBotController : MonoBehaviour {
         angle = Random.Range(1.0f, 20.0f);
       }
 
-      StartCoroutine(spinRobot((int)angle));
+      //StopCoroutine(rotations);
+      spinning = true;
+      Quaternion startRotation = transform.rotation;
+      float dAngle = 0;
+
+      // stop the velocity to avoid moving in circles
+      rb2d.velocity = Vector2.zero;
+      rb2d.angularVelocity = 0f;
+
+      // actually animate the rotation
+      while (dAngle < angle) {
+        dAngle += rotationSpeed * Time.deltaTime;
+        dAngle = Mathf.Min(dAngle, angle);
+
+        transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
+        yield return null;
+      }
+
+      // resume regular movement
+      spinning = false;
+
+      //StartCoroutine(spinRobot((int)angle));
       count++;
     }
   }
@@ -54,11 +75,13 @@ public class gBotController : MonoBehaviour {
 
   // rotate robot around to certain heading
   IEnumerator spinRobot(int angle) {
-    if(rotationsRunning) {
-      StopCoroutine(rotations);
-    }
+    // if(rotationsRunning) {
+    //   StopCoroutine(rotations);
+    // }
 
+    StopCoroutine(rotations);
     spinning = true;
+    StopCoroutine(rotations);
     Quaternion startRotation = transform.rotation;
     float dAngle = 0;
 
@@ -78,5 +101,32 @@ public class gBotController : MonoBehaviour {
     // resume regular movement
     spinning = false;
     rotations = StartCoroutine(trajNoise());
+  }
+
+  IEnumerator spinRobotFromDrone(int angle) {
+    if(!spinning) {
+      StopCoroutine(rotations);
+
+      spinning = true;
+      Quaternion startRotation = transform.rotation;
+      float dAngle = 0;
+
+      // stop the velocity to avoid moving in circles
+      rb2d.velocity = Vector2.zero;
+      rb2d.angularVelocity = 0f;
+
+      // actually animate the rotation
+      while (dAngle < angle) {
+        dAngle += rotationSpeed * Time.deltaTime;
+        dAngle = Mathf.Min(dAngle, angle);
+
+        transform.rotation = startRotation * Quaternion.AngleAxis(-dAngle, Vector3.forward);
+        yield return null;
+      }
+
+      // resume regular movement
+      spinning = false;
+      rotations = StartCoroutine(trajNoise());
+    }
   }
 }
