@@ -6,7 +6,7 @@ public class gBotController : MonoBehaviour {
   private Rigidbody2D rb2d;
   private Vector2 newVel;
   private float speed = 0.13f;
-  private bool spinning = false;
+  public bool spinning = false;
   private int count = 1;
   private float rotationSpeed = 180/2; // 180 degrees/2 seconds
 

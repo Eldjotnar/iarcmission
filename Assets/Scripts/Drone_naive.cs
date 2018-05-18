@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,18 +8,13 @@ public class Drone_naive : MonoBehaviour {
 	public float speed;
 	private GameObject target;
 
-	//private Collider droneCollider;
-	// Use this for initialization
 	void Start () {
 		StartCoroutine(directBot());
-		//droneCollider = GetComponent<Collider>();
-		//droneCollider.enabled = false
+		findBot("gBot3");
 	}
 
 	// Update is called once per frame
 	void Update () {
-
-		findBot("gBot3");
 		if(target) {
 			Vector3 diff = target.transform.position - transform.position;
 			if(diff.magnitude > 0.01) {
@@ -32,42 +27,14 @@ public class Drone_naive : MonoBehaviour {
 	}
 
 	IEnumerator directBot() {
-        float botHeading;
-        bool switching_gbots=false;
 		while(true) {
-            Loop:
-            if(switching_gbots) {
-	            Vector3 diff = target.transform.position - transform.position;
-	            if(diff.magnitude > 0.01) {
-		            diff.Normalize();
-		            float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-	            transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
-	            }
-	            transform.position += transform.up * speed * Time.deltaTime;
-                if((transform.position - target.transform.position).magnitude < 10){
-                    switching_gbots = false;
-                }
-                else{
-                    goto Loop;
-                }
-
-            }
-		    yield return new WaitForSeconds(6);
+			yield return new WaitForSeconds(6);
 			print("checking directions");
-            try 
-	            {	        
-					botHeading = target.transform.eulerAngles.z;
-	            }
-	        catch (System.NullReferenceException)
-	            {
-                    print("SWITCHING gBOTS!");
-                    switching_gbots=true;
-                    findBot("gBot4");
-                    goto Loop;
-	            }
-            //print(target.transform.eulerAngles.z);
-			//Vector3 diff = target.transform.position - transform.position;
-			if(botHeading > 180) {
+			float botHeading = target.transform.eulerAngles.z;
+			gBotController cs = target.GetComponent<gBotController>();
+			bool spinning = cs.spinning;
+
+			if(botHeading > 180 && !spinning) {
 				print("Tapping!");
 				target.SendMessage("spinRobot", 180);
 			} else if(botHeading > 90 && botHeading < 180) { // check if bot is in 2nd quadrant
